@@ -2,7 +2,13 @@
 #define SPRITE_INCLUDED__
 
 #include <SDL2/SDL.h>
+
+#ifdef __linux__
+#include <SDL2/SDL_image.h>
+#else // macosx
 #include <SDL2_image/SDL_image.h>
+#endif
+
 #include <iostream>
 
 extern SDL_Renderer *gRenderer;

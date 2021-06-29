@@ -11,7 +11,6 @@
 #include <algorithm>
 
 #include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
 
 SDL_Renderer *gRenderer = nullptr;
 
