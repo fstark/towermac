@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
 
 SDL_Renderer *gRenderer = nullptr;
 
@@ -33,8 +34,8 @@ class mob_scheduler
             timestamp_{ timestamp },
             mob_{ mob }
         {}
-        bool operator<( const spawn_event &o ) { return timestamp_<o.timestamp_; }
-        bool operator==( const spawn_event &o ) { return timestamp_==o.timestamp_; }
+        bool operator<( const spawn_event &o ) const { return timestamp_<o.timestamp_; }
+        bool operator==( const spawn_event &o ) const { return timestamp_==o.timestamp_; }
         friend mob_scheduler;
     };
 
@@ -308,7 +309,7 @@ int main(int argc, char* args[])
     }
     gRenderer =  SDL_CreateRenderer( window_, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetScale( gRenderer, ZoomFactor, ZoomFactor );
-
+    
     game_def::spec.wave_defs();
 
     game_loop gl;

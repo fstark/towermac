@@ -29,7 +29,7 @@ public:
     void add( T *t ) { t->insert_after((T*)this); }
 };
 
-const size_t ZoomFactor = 3;
+const size_t ZoomFactor = 2;
 const size_t MAP_SIZE = 21*16;
 
 const size_t SCREEN_WIDTH = 512;

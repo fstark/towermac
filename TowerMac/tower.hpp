@@ -19,6 +19,7 @@ public:
         charge_{ cooldown },
         cooldown_{ cooldown }
         {}
+    virtual ~tower(){}
 
     point location() const { return location_; }
 

@@ -29,6 +29,8 @@ public:
     step_modifier() {}
     step_modifier( const step_modifier& o ) : arg0_(o.arg0_) {}
     step_modifier( size_t arg0 ) : arg0_{arg0} {}
+    
+    virtual ~step_modifier(){};
 
     virtual step_modifier *clone() const = 0;
     virtual void apply( bullet &bullet ) {}

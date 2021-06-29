@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C346556268B494500362B28 /* bullet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34654C268B494400362B28 /* bullet.cpp */; };
+		1C346557268B494500362B28 /* simulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34654E268B494400362B28 /* simulation.cpp */; };
+		1C346558268B494500362B28 /* game_def.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34654F268B494400362B28 /* game_def.cpp */; };
+		1C34655C268B5C2F00362B28 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C34655B268B5C2F00362B28 /* SDL2_image.framework */; };
 		B67E867D2682A21000852A8A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B67E867C2682A21000852A8A /* main.cpp */; };
 		B67E86852682A29500852A8A /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B67E86842682A29500852A8A /* SDL2.framework */; };
 /* End PBXBuildFile section */
@@ -34,6 +38,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C34654A268B494400362B28 /* base.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = base.hpp; sourceTree = "<group>"; };
+		1C34654B268B494400362B28 /* sprite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sprite.hpp; sourceTree = "<group>"; };
+		1C34654C268B494400362B28 /* bullet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bullet.cpp; sourceTree = "<group>"; };
+		1C34654D268B494400362B28 /* simulation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = simulation.hpp; sourceTree = "<group>"; };
+		1C34654E268B494400362B28 /* simulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simulation.cpp; sourceTree = "<group>"; };
+		1C34654F268B494400362B28 /* game_def.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = game_def.cpp; sourceTree = "<group>"; };
+		1C346550268B494400362B28 /* game_def.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = game_def.hpp; sourceTree = "<group>"; };
+		1C346551268B494400362B28 /* mob.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mob.hpp; sourceTree = "<group>"; };
+		1C346552268B494400362B28 /* core.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = core.hpp; sourceTree = "<group>"; };
+		1C346553268B494400362B28 /* bullet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = bullet.hpp; sourceTree = "<group>"; };
+		1C346554268B494500362B28 /* tower.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tower.hpp; sourceTree = "<group>"; };
+		1C346555268B494500362B28 /* path.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = path.hpp; sourceTree = "<group>"; };
+		1C34655B268B5C2F00362B28 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		B67E86792682A21000852A8A /* TowerMac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TowerMac; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67E867C2682A21000852A8A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B67E86842682A29500852A8A /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
@@ -45,6 +62,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B67E86852682A29500852A8A /* SDL2.framework in Frameworks */,
+				1C34655C268B5C2F00362B28 /* SDL2_image.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +89,18 @@
 		B67E867B2682A21000852A8A /* TowerMac */ = {
 			isa = PBXGroup;
 			children = (
+				1C34654A268B494400362B28 /* base.hpp */,
+				1C34654C268B494400362B28 /* bullet.cpp */,
+				1C346553268B494400362B28 /* bullet.hpp */,
+				1C346552268B494400362B28 /* core.hpp */,
+				1C34654F268B494400362B28 /* game_def.cpp */,
+				1C346550268B494400362B28 /* game_def.hpp */,
+				1C346551268B494400362B28 /* mob.hpp */,
+				1C346555268B494500362B28 /* path.hpp */,
+				1C34654E268B494400362B28 /* simulation.cpp */,
+				1C34654D268B494400362B28 /* simulation.hpp */,
+				1C34654B268B494400362B28 /* sprite.hpp */,
+				1C346554268B494500362B28 /* tower.hpp */,
 				B67E867C2682A21000852A8A /* main.cpp */,
 			);
 			path = TowerMac;
@@ -79,6 +109,7 @@
 		B67E86832682A29500852A8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1C34655B268B5C2F00362B28 /* SDL2_image.framework */,
 				B67E86842682A29500852A8A /* SDL2.framework */,
 			);
 			name = Frameworks;
@@ -142,6 +173,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B67E867D2682A21000852A8A /* main.cpp in Sources */,
+				1C346558268B494500362B28 /* game_def.cpp in Sources */,
+				1C346556268B494500362B28 /* bullet.cpp in Sources */,
+				1C346557268B494500362B28 /* simulation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,7 +188,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -213,7 +247,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -252,6 +286,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = "/Users/zeal/Dev/C++/towermac/Towermac";
+				"INSTALL_PATH[sdk=*]" = "";
 				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -266,7 +302,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/SDL2_image.framework/Versions/A",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"WARNING_CFLAGS[arch=*]" = "-Wno-quoted-include-in-framework-header";
 			};
@@ -279,7 +321,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/SDL2_image.framework/Versions/A",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

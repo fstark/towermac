@@ -2,7 +2,7 @@
 #define SPRITE_INCLUDED__
 
 #include <SDL2/SDL.h>
-
+#include <SDL2_image/SDL_image.h>
 #include <iostream>
 
 extern SDL_Renderer *gRenderer;
@@ -18,7 +18,7 @@ class sprite
 public:
     sprite( const char *s, bool offset = true ) : offset_{ offset }
     {
-        sprite_ = SDL_LoadBMP( s );
+        sprite_ = IMG_Load( s );
         texture_ = SDL_CreateTextureFromSurface( gRenderer, sprite_ );
         assert( texture_ );
         assert( sprite_ );
