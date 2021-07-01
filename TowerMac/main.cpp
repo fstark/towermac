@@ -19,6 +19,7 @@ SDL_Renderer *gRenderer = nullptr;
 #include "mob.hpp"
 #include "bullet.hpp"
 #include "game_def.hpp"
+#include "sound_manager.hpp"
 
 class mob_scheduler
 {
@@ -299,19 +300,30 @@ int main(int argc, char* args[])
                 "Tower Mac Dev",
                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 SCREEN_WIDTH*ZoomFactor, SCREEN_HEIGHT*ZoomFactor,
-                SDL_WINDOW_SHOWN
+                SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
                 );
     if (window_ == NULL)
     {
         fprintf(stderr, "could not create window: %s\n", SDL_GetError());
         throw "SDL_CreateWindow failed";
     }
+    
+    int ww = 0;
+    int wh = 0;
+    SDL_GetWindowSize(window_, &ww, &wh);
+    int dw = 0;
+    int dh = 0;
+    SDL_GL_GetDrawableSize(window_, &dw, &dh);
+    int retina_factor = ww == dw && wh == dh ? 1 : 2; // we need to double the renderer scale on retina displays, and this is sadly the simplest way to test for them.
+    
     gRenderer =  SDL_CreateRenderer( window_, -1, SDL_RENDERER_ACCELERATED);
-    SDL_RenderSetScale( gRenderer, ZoomFactor, ZoomFactor );
+    SDL_RenderSetScale( gRenderer, ZoomFactor * retina_factor, ZoomFactor * retina_factor);
     
     game_def::spec.wave_defs();
 
     game_loop gl;
+    sound_manager sm = sound_manager();
+    sm.playsound("assets/general/sample.wav");
 
     try
     {
