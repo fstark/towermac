@@ -11,6 +11,7 @@
 		1C346557268B494500362B28 /* simulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34654E268B494400362B28 /* simulation.cpp */; };
 		1C346558268B494500362B28 /* game_def.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C34654F268B494400362B28 /* game_def.cpp */; };
 		1C34655C268B5C2F00362B28 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C34655B268B5C2F00362B28 /* SDL2_image.framework */; };
+		1CC3893D268E2AB000612FFA /* sound_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3893B268E2AB000612FFA /* sound_manager.cpp */; };
 		B67E867D2682A21000852A8A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B67E867C2682A21000852A8A /* main.cpp */; };
 		B67E86852682A29500852A8A /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B67E86842682A29500852A8A /* SDL2.framework */; };
 /* End PBXBuildFile section */
@@ -51,6 +52,8 @@
 		1C346554268B494500362B28 /* tower.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tower.hpp; sourceTree = "<group>"; };
 		1C346555268B494500362B28 /* path.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = path.hpp; sourceTree = "<group>"; };
 		1C34655B268B5C2F00362B28 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
+		1CC3893B268E2AB000612FFA /* sound_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sound_manager.cpp; sourceTree = "<group>"; };
+		1CC3893C268E2AB000612FFA /* sound_manager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sound_manager.hpp; sourceTree = "<group>"; };
 		B67E86792682A21000852A8A /* TowerMac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TowerMac; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67E867C2682A21000852A8A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B67E86842682A29500852A8A /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 				1C34654B268B494400362B28 /* sprite.hpp */,
 				1C346554268B494500362B28 /* tower.hpp */,
 				B67E867C2682A21000852A8A /* main.cpp */,
+				1CC3893B268E2AB000612FFA /* sound_manager.cpp */,
+				1CC3893C268E2AB000612FFA /* sound_manager.hpp */,
 			);
 			path = TowerMac;
 			sourceTree = "<group>";
@@ -176,6 +181,7 @@
 				1C346558268B494500362B28 /* game_def.cpp in Sources */,
 				1C346556268B494500362B28 /* bullet.cpp in Sources */,
 				1C346557268B494500362B28 /* simulation.cpp in Sources */,
+				1CC3893D268E2AB000612FFA /* sound_manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
