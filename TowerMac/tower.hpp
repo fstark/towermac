@@ -1,5 +1,6 @@
 #include "simulation.hpp"
 #include "sprite.hpp"
+#include "sound_manager.hpp"
 
 class tower : public simulated
 {
@@ -49,11 +50,12 @@ class basic_tower : public tower
 
     virtual void do_effect()
     {
+        sound_manager::sm.play_sound("assets/bullets/bullet_sharp.wav", 9);
         simulation_.create_bullet( location(), bullet_speed_ );
     }
 
 public:
-    basic_tower( simulation &simulation, point location ) : tower( simulation, location, 30 ) {}
+    basic_tower( simulation &simulation, point location ) : tower( simulation, location, 30*2 ) {}
 };
 
 class bi_tower : public tower
