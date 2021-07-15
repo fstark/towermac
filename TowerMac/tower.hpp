@@ -50,7 +50,6 @@ class basic_tower : public tower
 
     virtual void do_effect()
     {
-        sound_manager::sm.play_sound("assets/bullets/bullet_sharp.wav", 9);
         simulation_.create_bullet( location(), bullet_speed_ );
     }
 

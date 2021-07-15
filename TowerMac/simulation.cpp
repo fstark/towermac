@@ -52,8 +52,10 @@ bool simulation::has_towers()
 
 void simulation::create_bullet( const point &location, double speed )
 {
+    sound_manager::sm.play_foreground( snd_bullet_, 9 );
+
     auto b = new bullet( *this, location, normalize( (vector2f)target_-(vector2f)location )*speed );
-    b->add_modifier( new drunken_modifier() );
+//    b->add_modifier( new drunken_modifier() );
     b->add_modifier( new splitting_modifier() );
     register_bullet( b );
 }

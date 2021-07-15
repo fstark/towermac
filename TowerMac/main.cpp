@@ -322,7 +322,9 @@ int main(int argc, char* args[])
     game_def::spec.wave_defs();
 
     game_loop gl;
-    sound_manager::sm.play_sound("assets/general/sample.wav", 0, true);
+    
+    auto snd = sound_manager::sm.register_sound( "assets/general/sample.wav" );
+    sound_manager::sm.play_background( snd );
 
     try
     {

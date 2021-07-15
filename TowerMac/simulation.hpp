@@ -6,6 +6,7 @@
 #include "core.hpp"
 #include "path.hpp"
 #include "base.hpp"
+#include "sound_manager.hpp"
 
 class mob;
 class bullet;
@@ -26,8 +27,13 @@ class simulation
     std::vector<mob*> dead_mobs_;
     std::vector<bullet*> dead_bullets_;
 
+    size_t snd_bullet_;
+    
 public:
-    simulation() : base_{ point{ kBaseX, kBaseY } } {}
+    simulation() :
+        base_{ point{ kBaseX, kBaseY } },
+    snd_bullet_{ sound_manager::sm.register_sound( "assets/bullets/bullet00.wav" ) }
+    {}
     ~simulation();
 
     simulation( const simulation & ) = delete;

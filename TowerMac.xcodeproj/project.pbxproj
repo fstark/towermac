@@ -57,6 +57,7 @@
 		B67E86792682A21000852A8A /* TowerMac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TowerMac; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67E867C2682A21000852A8A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B67E86842682A29500852A8A /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		B67E86AA269C673700852A8A /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +93,7 @@
 		B67E867B2682A21000852A8A /* TowerMac */ = {
 			isa = PBXGroup;
 			children = (
+				B67E86AA269C673700852A8A /* assets */,
 				1C34654A268B494400362B28 /* base.hpp */,
 				1C34654C268B494400362B28 /* bullet.cpp */,
 				1C346553268B494400362B28 /* bullet.hpp */,
