@@ -109,9 +109,9 @@ std::unique_ptr<class sound> sound_manager::load_sound( const std::string &name 
 	if (err==1)
 	{
 		std::clog << "#### Will convert sound to 8 bits PCM\n";
-		std::clog << "  from " << wave.freq << "->" << spec_.freq << "\n";
-		std::clog << "  from " << wave.format << "->" << spec_.format << "\n";
-		std::clog << "  from " << (int)wave.channels << "->" << (int)spec_.channels << "\n";
+		std::clog << "  freq from " << wave.freq << " to " << spec_.freq << "\n";
+		std::clog << "  format from " << wave.format << " to " << spec_.format << "\n";
+		std::clog << "  channels from " << (int)wave.channels << " to " << (int)spec_.channels << "\n";
 		std::clog << "  on " << wave.samples << " samples\n";
 	}
 
