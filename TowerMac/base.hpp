@@ -6,34 +6,34 @@
 
 class base
 {
-    sprite sprite_{ "assets/general/base.bmp", false };
+	sprite sprite_{ "assets/general/base.bmp", false };
 
-    point location_;
+	point location_;
 
-    size_t hp_ = 50;
+	size_t hp_ = 50;
 
 public:
-    base( const point &location ) : location_{ location } {}
+	base( const point &location ) : location_{ location } {}
 
-    void render() const
-    {
-        sprite_.render( location_ );
-    }
+	void render() const
+	{
+		sprite_.render( location_ );
+	}
 
-    bool damage( size_t damage )
-    {
-        if (damage>=hp_)
-        {
-            hp_ = 0;
-            return true;            
-        }
+	bool damage( size_t damage )
+	{
+		if (damage>=hp_)
+		{
+			hp_ = 0;
+			return true;
+		}
 
-        hp_ -= damage;
+		hp_ -= damage;
 
-        return false;
-    }
+		return false;
+	}
 
-    size_t get_hp() const { return hp_; }
+	size_t get_hp() const { return hp_; }
 };
 
 #endif
