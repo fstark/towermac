@@ -1,0 +1,8 @@
+# A group is a list of spots
+# <key> <list of spots>
+video connector0 "The connector to the analog board. It brings power to the motherboard, and output the video signal"
+rom rom-hi0 rom-lo0 "Those chips contains the 64Kb ROM of the Macithosh"
+iwm iwm0 "The Integrated Woz Machine, labelled IWM on the Mac motherboard, is an integrated circuit that manages the floppy drives as the original Steve Wozniak code on an Apple ][ would"
+* connector0 rom-hi0 rom-lo0 iwm0 "All spots -- CHANGE ME"
+# The spots for the first level
+level0 connector0 rom-hi0 rom-lo0 iwm0 "-- spots activated for level0 --"

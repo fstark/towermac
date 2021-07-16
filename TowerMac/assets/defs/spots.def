@@ -1,5 +1,5 @@
 # The spots are the places where a tower can be placed
-# <spot-key> <point> <comment-string>
+# <spot-key> <group> <point> <comment-string>
 connector0 246 79 "This is the analog connector, which connects to the analog board, where the power supply and the video is located."
 rom-hi0 182 127 "The ROM-hi contains the high order 8bits of the Macintosh 64K ROM code"
 rom-lo0 182 167 "The ROM-lo contains the low order 8bits of the Macintosh 64K ROM code"

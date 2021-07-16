@@ -194,7 +194,7 @@ class game_loop
 			state_ = kGamePaused;
 	}
 
-	void draw_spot( const spot_def &s )
+	void draw_spot( const spot &s )
 	{
 		// SDL_Rect r;
 		// r.x = s.location.x-8+kMapX;

@@ -54,12 +54,12 @@ public:
 	}
 	
 	std::string read_name() { next_token(); assert( token_); std::string res{ token_ }; return res; }
+	std::string read_name_opt() { if (*current_=='"') return ""; next_token(); if (!token_) return ""; std::string res{ token_ }; return res; }
 	int read_int() { next_token(); assert( token_); int res = atoi(token_); return res; }
 	size_t read_size_t() { next_token(); assert( token_); size_t res = atoi(token_); return res; }
 	point read_point() { auto x = read_size_t(); auto y = read_size_t(); return {x,y}; }
 	std::string read_text() { assert( *current_++=='"' ); next_token( "\"" ); assert( token_); std::string res{ token_ }; return res; }
 
-	
 	size_t count_tabs() const { const char *p = current_; while (*p=='\t') p++; return p-current_; }
 	void skip_tabs( size_t tab_count )
 	{
@@ -106,7 +106,7 @@ void load_lanes( std::map<std::string,path> &def, const std::string &file )
 	def.insert( { name, p } );
 }
 
-void load_spots( std::map<std::string,spot_def> &def, const std::string &file )
+void load_spots( std::map<std::string,spot> &def, const std::string &file )
 {
 	auto f = resource_manager::open( file );
 	
@@ -119,6 +119,24 @@ void load_spots( std::map<std::string,spot_def> &def, const std::string &file )
 		std::cout << "    [" << description << "]\n";
 
 		def.insert( { name, { pt, description } } );
+	}
+}
+
+void load_groups( std::map<std::string,spot_group> &def, const std::string &file, const game_def &gd )
+{
+	auto f = resource_manager::open( file );
+	while (f->load_line())
+	{
+		spot_group sg;
+		
+		auto name = f->read_name();
+
+		std::string s;
+		while ((s=f->read_name_opt())!="")
+			sg.spots.push_back( gd.spot_by_name( s ) );
+		sg.description = f->read_text();
+		
+		def.insert( { name, sg } );
 	}
 }
 
@@ -186,29 +204,15 @@ void load_waves( std::vector<wave_def> &def, const std::string &file )
 
 game_def::game_def()
 {
-
-//    lane_defs_.insert( { "modem0", { point{ 335+kMapX, 84+kMapY }, { 286-335, 180-84, 215-286, 144-180, 132-215 } } } );
-	//    spot_defs_.insert( { "connector0", { { 246, 79 }, "This is the analog connector, which connects to the analog board, where the power supply and the video is located." } } );
-	//    spot_defs_.insert( { "rom-hi0", { { 182, 127 }, "The ROM-hi contains the high order 8bits of the Macintosh 64K ROM code" } } );
-	//    spot_defs_.insert( { "rom-lo0", { { 182, 167 }, "The ROM-lo contains the low order 8bits of the Macintosh 64K ROM code" } } );
-	//    spot_defs_.insert( { "iwm0", { { 182, 208 }, "The Integrated Woz Machine controls the floppy drive" } } );
-//    mob_defs_.insert( { "mob0", mob_def{ "assets/mobs/mob04-3.bmp", 100, 1, 9999 } } );
-//    mob_defs_.insert( { "mob1", mob_def{ "assets/mobs/mob04-3.bmp", 50, 1, 9999 } } );
-
+		//	Load defintions
 	load_lanes( lane_defs_, "assets/defs/lanes.def" );
 	load_spots( spot_defs_, "assets/defs/spots.def" );
+	load_groups( groups_, "assets/defs/groups.def", *this );
+
 	load_mobs( mob_defs_, "assets/defs/mobs.def" );
 	load_waves( wave_defs_, "assets/defs/waves.def" );
 
-//    wave_defs_.push_back(
-//        {
-//            {
-//                { "modem0", { { 10, "mob0", 0, 30 }, { 5, "mob1", 90, 15 } } } }
-//            }
-//        );
-
-		//  link
-
+		//  Link definitions
 	for (auto &w:wave_defs_)
 		for (auto &wl:w.wavelets)
 		{

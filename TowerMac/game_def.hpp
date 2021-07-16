@@ -42,20 +42,28 @@ struct wave_def
 	std::vector<wavelet_def> wavelets;
 };
 
-/// A place where one can put a tow
-struct spot_def
+/// A place where one can put a tower
+struct spot
 {
 	point location;
 	std::string description;
 };
 
+struct spot_group
+{
+	std::string description;
+	std::vector<const spot*> spots;
+};
+
 class game_def
 {
 	std::map<std::string,path> lane_defs_;              //  All known lanes
-	std::map<std::string,spot_def> spot_defs_;          //  Tower spots
+	std::map<std::string,spot> spot_defs_;          //  Tower spots
 	std::map<const std::string, mob_def> mob_defs_;     //  All the mobs
 	std::vector<wave_def> wave_defs_;
 
+	std::map<std::string,spot_group> groups_;
+	
 	game_def();
 
 public:
@@ -63,15 +71,20 @@ public:
 
 	const std::vector<wave_def> &wave_defs() const { return wave_defs_; };
 
-	const std::vector<spot_def> spot_defs() const
+	const std::vector<spot> spot_defs() const
 	{
-		std::vector<spot_def> res;
+		std::vector<spot> res;
 		for (auto [k,v]:spot_defs_)
 			res.push_back( v );
 
 		return res;
 	};
 
+	const spot *spot_by_name( const std::string &key ) const
+	{
+		return &spot_defs_.at( key );
+	}
+	
 	const wave_def &get_wave( int wave ) const
 	{
 		assert( wave>=0 && wave<wave_defs_.size() );
