@@ -4,12 +4,14 @@
 #include <cassert>
 #include <iostream>
 
+#include "core.hpp"
+
 class path
 {
     const point origin_;
-    const std::vector<int> deltas_;
     std::vector<point> screen_path_;
 
+    /// From a point and a series of alternating h and v deltas, create a pixel-by-pixel on-screen path
     std::vector<point> make_screen_path( const point &origin, const std::vector<int> &deltas )
     {
         std::vector<point> res;
@@ -32,17 +34,48 @@ class path
         return res;
     }
 
+    /// From a s set of corner points, create a pixel-by-pixel on-screen path
+    std::vector<point> make_screen_path( const std::vector<point> &points )
+    {
+        std::vector<point> res;
+        auto p = points.begin();
+        point pt = *p;
+        res.push_back( pt );
+        while (p!=points.end())
+        {
+            while (pt!=*p)
+            {
+                if (pt.x<p->x)
+                    pt.x++;
+                else if (pt.x>p->x)
+                    pt.x--;
+                else
+                    if (pt.y<p->y)
+                        pt.y++;
+                    else
+                        pt.y--;
+                res.push_back( pt );
+            }
+            p++;
+        }
+        return res;
+    }
+
 public:
     path( const point &origin, const std::vector<int> &deltas ) :
         origin_{ origin },
-        deltas_{ deltas },
-        screen_path_{ make_screen_path( origin_, deltas_ ) }
+        screen_path_{ make_screen_path( origin_, deltas ) }
         {}
 
-    path offset( int dx, int dy )
-    {
-        return { { origin_.x+dx, origin_.y+dy }, deltas_ };
-    }
+    path( const std::vector<point> &points ) :
+        origin_{ points[0] },
+        screen_path_{ make_screen_path( points ) }
+        {}
+
+//    path offset( int dx, int dy )
+//    {
+//        return { { origin_.x+dx, origin_.y+dy }, deltas_ };
+//    }
 
     bool contains( float position ) const
     {

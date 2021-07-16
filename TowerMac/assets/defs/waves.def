@@ -1,0 +1,9 @@
+# A serie of waves
+# USE TABS, NOT SPACES
+# <comment>
+# [TAB] <lane-key>
+# [TAB][TAB] <count> <mob_name> <initial_delay> <rate_of_spawn>
+"Wave 1 of 1"
+	modem0
+		10 mob0 0 30
+		5 mob1 90 15

@@ -1,0 +1,3 @@
+# Lanes definitions
+# <lane-key> [list of pair coordinates]
+modem0 335 84 286 84 286 180 215 180 215 144 132 144

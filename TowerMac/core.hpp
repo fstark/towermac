@@ -55,6 +55,10 @@ struct point
 //    point operator-( const point &o ) const { return point{ x-o.x, y-o.y }; }
     vector2f operator/( double v ) const;
     operator vector2f() const;
+    
+    bool operator!=( const point &o ) const { return x!=o.x || y!=o.y; }
+
+    point operator+( const point &o ) const { return { x+o.x, y+o.y}; }
 };
 
 struct vector2f

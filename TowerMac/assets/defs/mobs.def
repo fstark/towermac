@@ -1,0 +1,4 @@
+# Definition of the enemies
+# <key> <bitmap> <hp> <speed> <damage>
+mob0 assets/mobs/mob04-3.bmp 100 1 9999
+mob1 assets/mobs/mob04-3.bmp 50 1 9999
