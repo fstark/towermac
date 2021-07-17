@@ -12,6 +12,7 @@ class mob;
 class bullet;
 class tower;
 
+///	A simulation manages the game during a single wave
 class simulation
 {
 	size_t timestamp_=0;

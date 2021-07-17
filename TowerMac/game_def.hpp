@@ -47,6 +47,11 @@ struct spot
 {
 	point location;
 	std::string description;
+	
+	bool contains( const point &p ) const
+	{
+		return distance( p, location )< 16;
+	}
 };
 
 struct spot_group
@@ -58,7 +63,7 @@ struct spot_group
 class game_def
 {
 	std::map<std::string,path> lane_defs_;              //  All known lanes
-	std::map<std::string,spot> spot_defs_;          //  Tower spots
+	std::map<std::string,spot*> spot_defs_;          //  Tower spots
 	std::map<const std::string, mob_def> mob_defs_;     //  All the mobs
 	std::vector<wave_def> wave_defs_;
 
@@ -71,9 +76,9 @@ public:
 
 	const std::vector<wave_def> &wave_defs() const { return wave_defs_; };
 
-	const std::vector<spot> spot_defs() const
+	const std::vector<const spot *> spot_defs() const
 	{
-		std::vector<spot> res;
+		std::vector<const spot*> res;
 		for (auto [k,v]:spot_defs_)
 			res.push_back( v );
 
@@ -82,7 +87,7 @@ public:
 
 	const spot *spot_by_name( const std::string &key ) const
 	{
-		return &spot_defs_.at( key );
+		return spot_defs_.at( key );
 	}
 	
 	const wave_def &get_wave( int wave ) const

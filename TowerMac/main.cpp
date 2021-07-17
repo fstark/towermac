@@ -95,25 +95,62 @@ mob_scheduler schedule_wave( const wave_def &wave, simulation &simulation )
 	return sched;
 }
 
-//  Contains the state of the whole game (tower placements, opened spots, health, wave number, buffs, etc)
-// class game_state
-// {
-//     std::vector<tower_spec> towers_;
+///	Anything that changes a simulation (twoerplacement, powerup, etc)
+class item
+{
+	size_t priority_ = 0;
+	
+public:
+	virtual ~item() {}
 
-//     std::vector<spot_spec> open_spots_;
-// };
+	///	Applies to a simulation to set it up
+	virtual void apply( simulation &simulation ) const = 0;
+};
+
+class tower_item : public item
+{
+	const spot *spot_;	//	#### Maybe have a 'spotted' item superclass
+
+public:
+	tower_item( const spot *spot ) : spot_{spot} {}
+	
+	virtual void apply( simulation &simulation ) const
+	{
+		simulation.create_tower( spot_->location );
+	}
+};
+
+/// Contains the state of the whole game (tower placements, opened spots, health, wave number, buffs, etc)
+///	Fundamentlly, this is a save file
+class game_state
+{
+	std::vector<const spot *> open_spots_;
+
+	///	The items are what recreates the gamestate
+	std::vector<std::unique_ptr<item>> items_;
+public:
+	void add_spot( const spot *spot ) { open_spots_.push_back( spot ); }
+	void add_item( std::unique_ptr<item> item ) { items_.emplace_back( std::move( item ) ); }
+	
+	const std::vector<const spot *> &open_spots() const { return open_spots_; }
+	const std::vector<const item *> items() const
+	{
+		std::vector<const item *> res;
+		for (auto &i:items_)
+			res.push_back( i.get() );
+		return res;
+	}
+};
 
 SDL_Window* window_ = NULL;
 
 class game_loop
 {
-	path path_;
-
-	point target_{ 128, 128 };
+	point target_{ 128, 128 };	///	Current mouse target
 
 	sprite map_background_{ "assets/general/map.bmp", false };
 	sprite map_background_gray_{ "assets/general/map-gray.bmp", false };
-
+	
 	enum eGameState
 	{
 		kTowerPlacement = 0,
@@ -129,7 +166,8 @@ class game_loop
 
 	size_t ticks_ = 0;
 
-	simulation simulation_;
+	game_state game_state_;
+	std::unique_ptr<simulation> simulation_;
 
 	mob_scheduler scheduler_;
 
@@ -160,8 +198,21 @@ class game_loop
 				case kTowerPlacement:
 					if (e.type == SDL_MOUSEBUTTONDOWN)
 					{
-						simulation_.create_tower( point{ e.button.x/ZoomFactor, e.button.y/ZoomFactor } );
-						scheduler_ = schedule_wave( game_def::spec.get_wave(0), simulation_ );
+						point p{ e.button.x/ZoomFactor, e.button.y/ZoomFactor };
+						bool found = false;
+						for (auto s:game_state_.open_spots())
+							if (s->contains(p))
+							{
+								game_state_.add_item( std::make_unique<tower_item>( s ) );
+								found = true;
+								break;
+							}
+						if (!found)
+							break;
+						simulation_ = std::make_unique<simulation>();
+						for (auto i:game_state_.items())
+							i->apply( *simulation_ );
+						scheduler_ = schedule_wave( game_def::spec.get_wave(0), *simulation_ );
 						state_ = kGameRunning;
 					}
 					break;
@@ -184,10 +235,9 @@ class game_loop
 	{
 		if (state_==kGameRunning || state_==kGameStep)
 		{
-			simulation_.set_target( target_ );
-			// level_.step( simulation_ );
-			scheduler_.step( simulation_ );
-			simulation_.step();
+			simulation_->set_target( target_ );
+			scheduler_.step( *simulation_ );
+			simulation_->step();
 		}
 
 		if (state_==kGameStep)
@@ -224,25 +274,28 @@ class game_loop
 
 		if (state_==kTowerPlacement)
 		{
-			for (auto &s:game_def::spec.spot_defs())
-				draw_spot( s );
+			for (auto s:game_state_.open_spots())
+				draw_spot( *s );
 		
 			for (auto p:game_def::spec.get_lanes(0))
 				draw_path( *p );
 		}
 
-		simulation_.get_base().render();
-
-		for (auto t:simulation_.get_towers())       //  #### not simulation, game_state
-			t->render();
-
-		if (state_==kGameRunning || state_==kGamePaused || state_==kGameStep)
+		if (simulation_)
 		{
-			for (auto m=simulation_.get_mobs()->begin();m!=simulation_.get_mobs()->end();m=m->next_)
-				m->render();
+			simulation_->get_base().render();
 
-			for (auto b=simulation_.get_bullets()->begin();b!=simulation_.get_bullets()->end();b=b->next_)
-				b->render();
+			for (auto t:simulation_->get_towers())       //  #### not simulation, game_state
+				t->render();
+
+			if (state_==kGameRunning || state_==kGamePaused || state_==kGameStep)
+			{
+				for (auto m=simulation_->get_mobs()->begin();m!=simulation_->get_mobs()->end();m=m->next_)
+					m->render();
+
+				for (auto b=simulation_->get_bullets()->begin();b!=simulation_->get_bullets()->end();b=b->next_)
+					b->render();
+			}
 		}
 
 //        SDL_UpdateWindowSurface(window);
@@ -253,8 +306,10 @@ class game_loop
 	}
 
 public:
-	game_loop() : path_{ point{ 335, 84 }, { 286-335, 180-84, 215-286, 144-180, 132-215 } }
+	game_loop()
 	{
+		for (auto &s:game_def::spec.spot_defs())
+			game_state_.add_spot( s );
 	}
 
 	~game_loop()

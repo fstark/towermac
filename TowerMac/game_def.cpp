@@ -108,7 +108,7 @@ void load_lanes( std::map<std::string,path> &def, const std::string &file )
 	}
 }
 
-void load_spots( std::map<std::string,spot> &def, const std::string &file )
+void load_spots( std::map<std::string,spot *> &def, const std::string &file )
 {
 	auto f = resource_manager::open( file );
 	
@@ -120,7 +120,7 @@ void load_spots( std::map<std::string,spot> &def, const std::string &file )
 
 		std::cout << "    [" << description << "]\n";
 
-		def.insert( { name, { pt, description } } );
+		def.insert( { name, new spot{ pt, description } } );
 	}
 }
 
