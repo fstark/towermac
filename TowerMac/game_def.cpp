@@ -96,14 +96,16 @@ void load_lanes( std::map<std::string,path> &def, const std::string &file )
 {
 	auto f = resource_manager::open( file );
 	
-	f->load_line();
-	auto name = f->read_name();
-	std::vector<point> p;
+	while (f->load_line())
+	{
+		auto name = f->read_name();
+		std::vector<point> p;
 
-	while (!f->eol())
-		p.push_back( f->read_point()+point{ kMapX, kMapY } );
+		while (!f->eol())
+			p.push_back( f->read_point()+point{ kMapX, kMapY } );
 
-	def.insert( { name, p } );
+		def.insert( { name, p } );
+	}
 }
 
 void load_spots( std::map<std::string,spot> &def, const std::string &file )
@@ -216,7 +218,15 @@ game_def::game_def()
 	for (auto &w:wave_defs_)
 		for (auto &wl:w.wavelets)
 		{
-			wl.path_ = &lane_defs_.at(wl.lane_key);
+			try
+			{
+				wl.path_ = &lane_defs_.at(wl.lane_key);
+			}
+			catch (...)
+			{
+				std::cerr << "Failed to link to lane [" << wl.lane_key << "]\n";
+				throw "Bad definition files";
+			}
 			for (auto &mg:wl.mob_groups)
 				mg.mob_def_ = &mob_defs_.at(mg.mob_key);
 		}

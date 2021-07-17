@@ -7,3 +7,6 @@
 	modem0
 		10 mob0 0 30
 		5 mob1 90 15
+	floppy0
+		10 mob0 100 30
+		5 mob1 90 15
