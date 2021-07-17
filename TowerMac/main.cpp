@@ -98,13 +98,16 @@ mob_scheduler schedule_wave( const wave_def &wave, simulation &simulation )
 ///	Anything that changes a simulation (twoerplacement, powerup, etc)
 class item
 {
-	size_t priority_ = 0;
+	size_t priority_;
 	
 public:
+	item( size_t priority=0 ) : priority_{ priority } {}
 	virtual ~item() {}
-
+	
 	///	Applies to a simulation to set it up
 	virtual void apply( simulation &simulation ) const = 0;
+
+	static bool compare_ptr( const item* a, const item* b) { return a->priority_<b->priority_; }
 };
 
 class tower_item : public item
@@ -117,6 +120,20 @@ public:
 	virtual void apply( simulation &simulation ) const
 	{
 		simulation.create_tower( spot_->location );
+	}
+};
+
+class cooldown_item : public item
+{
+public:
+	
+	cooldown_item() : item{ 1 } {}
+	virtual void apply( simulation &simulation ) const
+	{
+		for (auto &t:simulation.all_towers())
+		{
+			t->set_cooldown( t->cooldown()/2 );
+		}
 	}
 };
 
@@ -144,7 +161,15 @@ public:
 		std::vector<const item *> res;
 		for (auto &i:items_)
 			res.push_back( i.get() );
+		std::sort( std::begin(res), std::end(res), item::compare_ptr );
 		return res;
+	}
+	
+	void apply( simulation &simulation )
+	{
+		auto its = items();
+		for (auto &i:its)
+			i->apply( simulation );
 	}
 };
 
@@ -216,9 +241,11 @@ class game_loop
 							}
 						if (!found)
 							break;
+
 						simulation_ = std::make_unique<simulation>();
-						for (auto i:game_state_.items())
-							i->apply( *simulation_ );
+
+						game_state_.apply( *simulation_ );
+
 						scheduler_ = schedule_wave( game_def::spec.get_wave(0), *simulation_ );
 						state_ = kGameRunning;
 					}
@@ -317,6 +344,7 @@ public:
 	{
 		for (auto &s:game_def::spec.spot_defs())
 			game_state_.add_spot( s );
+		game_state_.add_item( std::make_unique<cooldown_item>() );
 	}
 
 	~game_loop()

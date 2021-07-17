@@ -22,6 +22,9 @@ public:
 		{}
 	virtual ~tower(){}
 
+	size_t cooldown() const { return cooldown_; }
+	void set_cooldown( size_t cooldown ) { cooldown_ = cooldown; }
+
 	point location() const { return location_; }
 
 	void render()

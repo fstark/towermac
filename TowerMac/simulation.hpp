@@ -51,7 +51,8 @@ public:
 	void step();
 
 	tower *create_tower( const point &location );
-
+	std::vector<tower *> &all_towers() { return towers_; }
+	
 	void register_mob( mob *mob );
 
 	void create_bullet( const point &location, double speed );
