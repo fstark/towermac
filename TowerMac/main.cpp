@@ -130,6 +130,12 @@ class game_state
 	std::vector<std::unique_ptr<item>> items_;
 public:
 	void add_spot( const spot *spot ) { open_spots_.push_back( spot ); }
+	void close_spot( const spot *spot )
+	{
+		//	Who needs INTERCAL when you have C++ ?
+		open_spots_.erase(std::remove(std::begin(open_spots_), std::end(open_spots_), spot));
+	}
+
 	void add_item( std::unique_ptr<item> item ) { items_.emplace_back( std::move( item ) ); }
 	
 	const std::vector<const spot *> &open_spots() const { return open_spots_; }
@@ -204,6 +210,7 @@ class game_loop
 							if (s->contains(p))
 							{
 								game_state_.add_item( std::make_unique<tower_item>( s ) );
+								game_state_.close_spot( s );
 								found = true;
 								break;
 							}
@@ -338,6 +345,11 @@ public:
 			// std::clog << "Mob count = " << simulation_.get_mobs().size() << "\n";
 		}
 
+		if (simulation_ && simulation_->game_over())
+		{
+			simulation_ = nullptr;
+			state_ = kTowerPlacement;
+		}
 		return state_==kGameExiting;
 	}
 };
