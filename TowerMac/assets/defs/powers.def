@@ -1,10 +1,13 @@
 # powerups definitions
-# <powerup-key> <spot-group> <class> <attribute> <description>
-rom-speed rom speed 20 "Towers placed on ROM chips have +20% fire rate"
-rom-clean rom damage 30 "Towers placed on ROM chips have +30% damage"
-iwm-fire iwm auto-aim 100 "Towers on the IWM will fire at the closest enemy"
-video-beam video/3 pierce 0 "The 3 towers the closest to the video connector shoot piercing bullets"
-simasimac * simasimac 0 "All towers get a burst pattern firing rate"
-drunk ? drunk 0 "Pick a tower to get a drink with, it'll get drunk"
-double ? double 0 "Pick a tower, it will shot twice as fast, but deal only half damage"
-ricochet ? ricochet 3 "Pick a tower, bullets will ricochet up to 3 times on ennemies"
+# <powerup-key> <priority> <spot-group> <class> <attribute> <description>
+# Creates a base tower on a specific spot
+tower0 0 ? base 0 "Standard tower"
+# Powerups
+rom-speed 1 rom speed 20 "Towers placed on ROM chips have +20% fire rate"
+rom-clean 1 rom damage 30 "Towers placed on ROM chips have +30% damage"
+iwm-fire 1 iwm auto-aim 100 "Towers on the IWM will fire at the closest enemy"
+video-beam 1 video/3 pierce 0 "The 3 towers the closest to the video connector shoot piercing bullets"
+simasimac 1 * simasimac 0 "All towers get a burst pattern firing rate"
+drunk 1 ? drunk 0 "Pick a tower to get a drink with, it'll get drunk"
+double 1 ? double 0 "Pick a tower, it will shot twice as fast, but deal only half damage"
+ricochet 1 ? ricochet 3 "Pick a tower, bullets will ricochet up to 3 times on ennemies"

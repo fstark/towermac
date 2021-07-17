@@ -49,8 +49,11 @@ void sound_manager::next_frame( uint8_t *data )
 		if (foreground_)
 			std::copy( foreground_, foreground_+FRAME, data );
 		else
+		{
 			std::copy( background_, background_+FRAME, data );
-	
+//			std::clog << "B" << std::flush;
+		}
+			
 	//  Advance foreground if needed
 	if (foreground_)
 	{

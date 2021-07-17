@@ -6,7 +6,9 @@
 "Wave 1 of 1"
 	modem0
 		10 mob0 0 30
-		5 mob1 90 15
+		5 mob2 90 15
 	floppy0
-		10 mob0 100 30
-		5 mob1 90 15
+		10 mob1 100 30
+		5 mob3 90 15
+	direct0
+		1 boss0 800 0

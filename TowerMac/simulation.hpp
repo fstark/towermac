@@ -28,11 +28,13 @@ class simulation
 	std::vector<bullet*> dead_bullets_;
 
 	size_t snd_bullet_;
-	
+	size_t snd_game_over_;
+
 public:
 	simulation() :
 		base_{ point{ kBaseX, kBaseY } },
-	snd_bullet_{ sound_manager::sm.register_sound( "assets/bullets/bullet00.wav" ) }
+	snd_bullet_{ sound_manager::sm.register_sound( "assets/bullets/bullet00.wav" ) },
+	snd_game_over_{ sound_manager::sm.register_sound( "assets/general/game-over.wav" ) }
 	{}
 	~simulation();
 

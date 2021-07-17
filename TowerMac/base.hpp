@@ -4,6 +4,7 @@
 #include "core.hpp"
 #include "sprite.hpp"
 
+///	The base we protect (the 68x)
 class base
 {
 	sprite sprite_{ "assets/general/base.bmp", false };
@@ -11,7 +12,7 @@ class base
 	point location_;
 
 	size_t hp_ = 50;
-
+	
 public:
 	base( const point &location ) : location_{ location } {}
 

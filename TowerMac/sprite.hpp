@@ -25,9 +25,14 @@ public:
 	sprite( const char *s, bool offset = true ) : offset_{ offset }
 	{
 		sprite_ = IMG_Load( s );
+		if (!sprite_)
+		{
+			std::cerr << "Cannot load sprite [" << s << "]\n";
+			throw "Cannot load sprite";
+		}
+		assert( sprite_ );
 		texture_ = SDL_CreateTextureFromSurface( gRenderer, sprite_ );
 		assert( texture_ );
-		assert( sprite_ );
 		rect_ = sprite_->clip_rect;
 	}
 

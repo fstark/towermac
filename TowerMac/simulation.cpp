@@ -92,6 +92,7 @@ void simulation::damage_base( size_t damage )
 	if (base_.damage( damage ))
 	{
 		std::clog << "GAME OVER\n";
+		sound_manager::sm.play_foreground( snd_game_over_, 999 );
 	}
 	std::clog << "Remaining health :" << base_.get_hp() << " (-" << damage << ")\n";
 }

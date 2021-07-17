@@ -54,7 +54,7 @@ class basic_tower : public tower
 	}
 
 public:
-	basic_tower( simulation &simulation, point location ) : tower( simulation, location, 30*2 ) {}
+	basic_tower( simulation &simulation, point location ) : tower( simulation, location, 30 ) {}
 };
 
 class bi_tower : public tower
