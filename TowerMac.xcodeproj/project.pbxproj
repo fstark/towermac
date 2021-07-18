@@ -14,6 +14,7 @@
 		1CC3893D268E2AB000612FFA /* sound_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3893B268E2AB000612FFA /* sound_manager.cpp */; };
 		B67E867D2682A21000852A8A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B67E867C2682A21000852A8A /* main.cpp */; };
 		B67E86852682A29500852A8A /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B67E86842682A29500852A8A /* SDL2.framework */; };
+		B67E86B026A41A5800852A8A /* game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B67E86AE26A41A5800852A8A /* game.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,9 @@
 		B67E86842682A29500852A8A /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		B67E86AA269C673700852A8A /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		B67E86AC26A07EA300852A8A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		B67E86AD26A419FC00852A8A /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = SOURCE_ROOT; };
+		B67E86AE26A41A5800852A8A /* game.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = game.cpp; sourceTree = "<group>"; };
+		B67E86AF26A41A5800852A8A /* game.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = game.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +99,11 @@
 			isa = PBXGroup;
 			children = (
 				B67E86AC26A07EA300852A8A /* README.md */,
+				B67E86AD26A419FC00852A8A /* TODO.md */,
 				B67E86AA269C673700852A8A /* assets */,
 				1C34654A268B494400362B28 /* base.hpp */,
+				B67E86AE26A41A5800852A8A /* game.cpp */,
+				B67E86AF26A41A5800852A8A /* game.hpp */,
 				1C34654C268B494400362B28 /* bullet.cpp */,
 				1C346553268B494400362B28 /* bullet.hpp */,
 				1C346552268B494400362B28 /* core.hpp */,
@@ -186,6 +193,7 @@
 				1C346556268B494500362B28 /* bullet.cpp in Sources */,
 				1C346557268B494500362B28 /* simulation.cpp in Sources */,
 				1CC3893D268E2AB000612FFA /* sound_manager.cpp in Sources */,
+				B67E86B026A41A5800852A8A /* game.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

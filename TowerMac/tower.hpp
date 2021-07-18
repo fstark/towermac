@@ -1,3 +1,6 @@
+#ifndef TOWER_INCLUDED__
+#define TOWER_INCLUDED__
+
 #include "simulation.hpp"
 #include "sprite.hpp"
 #include "sound_manager.hpp"
@@ -85,4 +88,6 @@ class tri_tower : public tower
 public:
 	tri_tower( simulation &simulation, point location ) : tower( simulation, location, 15 ) {}
 };
+
+#endif
 

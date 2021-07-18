@@ -47,13 +47,13 @@ public:
 		SDL_Rect dst_rect = rect_;
 		if (offset_)
 		{
-			dst_rect.x = p.x-rect_.w/2;
-			dst_rect.y = p.y-rect_.h/2;
+			dst_rect.x = (int)p.x-rect_.w/2;
+			dst_rect.y = (int)p.y-rect_.h/2;
 		}
 		else
 		{
-			dst_rect.x = p.x;
-			dst_rect.y = p.y;
+			dst_rect.x = (int)p.x;
+			dst_rect.y = (int)p.y;
 		}
 		int result = SDL_RenderCopyEx( gRenderer, texture_, &rect_, &dst_rect, rotate*90, nullptr, SDL_FLIP_NONE );
 		// int result  = SDL_BlitScaled( sprite_, &rect_, gScreen, &dst_rect );

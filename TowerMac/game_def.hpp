@@ -45,6 +45,7 @@ struct wave_def
 /// A place where one can put a tower
 struct spot
 {
+	std::string key;
 	point location;
 	std::string description;
 	

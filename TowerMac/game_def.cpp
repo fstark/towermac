@@ -120,7 +120,7 @@ void load_spots( std::map<std::string,spot *> &def, const std::string &file )
 
 		std::cout << "    [" << description << "]\n";
 
-		def.insert( { name, new spot{ pt, description } } );
+		def.insert( { name, new spot{ name, pt, description } } );
 	}
 }
 

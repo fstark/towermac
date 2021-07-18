@@ -64,8 +64,9 @@ public:
 	void destroy_bullet( bullet *b );
 
 	bool has_towers();	//	?####
-	bool game_over() { return base_.get_hp()==0; }
-
+	bool game_over() const { return base_.get_hp()==0; }
+	bool has_mobs() const { return !mobs_.is_empty(); }
+	
 	const base &get_base() const { return base_; }
 	std::vector<tower *> get_towers() const { return towers_; }
 	const dlist<mob> *get_mobs() const { return &mobs_; }
