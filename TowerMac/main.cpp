@@ -21,6 +21,7 @@ SDL_Renderer *gRenderer = nullptr;
 #include "game_def.hpp"
 #include "sound_manager.hpp"
 #include "game.hpp"
+#include "font.hpp"
 
 class mob_scheduler
 {
@@ -230,6 +231,9 @@ class game_loop
 		SDL_RenderClear( gRenderer );
 
 		map_background_gray_.render( point{ kMapX, kMapY } );
+//		font::normal->render_text( { 20, 20 } , "Hello, World" );
+//		font::normal->render_text( { 20, 20 } , "!\"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~" );
+		font::normal->render_text( { 1, 1 } , "   Hello, World: we can now write stuff on screen, including numb3r5!" );
 
 		if (state_==kTowerPlacement)
 		{
@@ -353,9 +357,10 @@ int main(int argc, char* args[])
 	
 	gRenderer =  SDL_CreateRenderer( window_, -1, SDL_RENDERER_ACCELERATED);
 	SDL_RenderSetScale( gRenderer, ZoomFactor * retina_factor, ZoomFactor * retina_factor);
-	
-	game_def::spec.wave_defs();
+	font::init();
 
+	game_def::spec.wave_defs();
+	
 	game_loop gl;
 	
 	auto snd = sound_manager::sm.register_sound( "assets/general/sample.wav" );

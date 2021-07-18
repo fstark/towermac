@@ -15,16 +15,24 @@ extern SDL_Renderer *gRenderer;
 
 class sprite
 {
-	SDL_Surface* sprite_;
+//	SDL_Surface* sprite_;
 	SDL_Texture* texture_;
 	SDL_Rect rect_;
 
 	bool offset_ = true;
 
 public:
+	sprite( SDL_Surface *s, bool offset ) : offset_{ offset }
+	{
+		assert( s );
+		texture_ = SDL_CreateTextureFromSurface( gRenderer, s );
+		assert( texture_ );
+		rect_ = s->clip_rect;
+	}
+
 	sprite( const char *s, bool offset = true ) : offset_{ offset }
 	{
-		sprite_ = IMG_Load( s );
+		SDL_Surface *sprite_ = IMG_Load( s );
 		if (!sprite_)
 		{
 			std::cerr << "Cannot load sprite [" << s << "]\n";
@@ -34,11 +42,11 @@ public:
 		texture_ = SDL_CreateTextureFromSurface( gRenderer, sprite_ );
 		assert( texture_ );
 		rect_ = sprite_->clip_rect;
+		SDL_FreeSurface( sprite_ );
 	}
 
 	~sprite()
 	{
-		SDL_FreeSurface( sprite_ );
 		SDL_DestroyTexture( texture_ );
 	}
 
@@ -64,6 +72,9 @@ public:
 			throw "Blit error";
 		}
 	}
+	
+	size_t height() const { return rect_.h; }
+	size_t width() const { return rect_.w; }
 };
 
 #endif
