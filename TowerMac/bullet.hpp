@@ -8,7 +8,7 @@
  */
 
 #include "core.hpp"
-#include "sprite.hpp"
+#include "image.hpp"
 #include "simulation.hpp"
 #include "mob.hpp"
 
@@ -38,7 +38,7 @@ public:
 
 class bullet : public node<bullet>, public simulated
 {
-	sprite sprite_{ "assets/bullets/bullet00-0.bmp" };
+	image image_{ "assets/bullets/bullet00-0.bmp" };
 
 	// float speed_ = 2;
 	// mob &target_;
@@ -75,7 +75,7 @@ public:
 
 	void render()
 	{
-		sprite_.render( position_ );
+		image_.render( position_ );
 	}
 
 	void step()

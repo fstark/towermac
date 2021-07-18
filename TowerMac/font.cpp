@@ -47,7 +47,7 @@ static void set_pixel( SDL_Surface *s, size_t x, size_t y, uint32_t color )
 font::font( const std::string &filename )
 {
 	for (int i=0;i!=256;i++)
-		sprites_[i] = nullptr;
+		images_[i] = nullptr;
 	
 	SDL_Surface *s = IMG_Load( filename.c_str() );
 	if (!s)
@@ -83,7 +83,7 @@ font::font( const std::string &filename )
 			for (int x0=0;x0!=sub_surf->w;x0++)
 				set_pixel( sub_surf, x0, y0, get_pixel( s, bx+x0, 1+y0 ) );
 
-		sprites_[c] = std::make_shared<sprite>( sub_surf, false );
+		images_[c] = std::make_shared<image>( sub_surf, false );
 		SDL_FreeSurface( sub_surf );
 		
 		p += x-bx;
@@ -93,23 +93,37 @@ font::font( const std::string &filename )
 
 		//	Uppercase letters
 	for (char c='a';c<='z';c++)
-		sprites_[c-'a'+'A'] = sprites_[c];
+		images_[c-'a'+'A'] = images_[c];
 
 	SDL_UnlockSurface( s );
 
 	SDL_FreeSurface( s );
 }
 
-void font::render_text( const point &origin, const char *string )
+void font::render_text( const point &origin, const char *string ) const
 {
 	point p{ origin };
 	int c;
 	while((c=*string++))
 	{
-		if (sprites_[c])
+		if (images_[c])
 		{
-			sprites_[c]->render( p );
-			p.x += sprites_[c]->width()+1;
+			images_[c]->render( p );
+			p.x += images_[c]->width()+1;
 		}
 	}
+}
+
+size_t font::measure_text( const char *s ) const
+{
+	size_t w = 0;
+	int c;
+	while((c=*s++))
+	{
+		if (images_[c])
+		{
+			w += images_[c]->width()+1;
+		}
+	}
+	return w-1;
 }

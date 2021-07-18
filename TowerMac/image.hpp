@@ -1,5 +1,5 @@
-#ifndef SPRITE_INCLUDED__
-#define SPRITE_INCLUDED__
+#ifndef IMAGE_INCLUDED__
+#define IMAGE_INCLUDED__
 
 #include <SDL2/SDL.h>
 
@@ -13,16 +13,16 @@
 
 extern SDL_Renderer *gRenderer;
 
-class sprite
+///	This is an image that can be drawn on screen
+class image
 {
-//	SDL_Surface* sprite_;
-	SDL_Texture* texture_;
-	SDL_Rect rect_;
+	SDL_Texture* texture_;	///	The SDL texture containing the image
+	SDL_Rect rect_;			///	The bounds of the image
 
-	bool offset_ = true;
+	bool offset_ = true;	///	If true, we draw it centered (#### it should no be there)
 
 public:
-	sprite( SDL_Surface *s, bool offset ) : offset_{ offset }
+	image( SDL_Surface *s, bool offset ) : offset_{ offset }
 	{
 		assert( s );
 		texture_ = SDL_CreateTextureFromSurface( gRenderer, s );
@@ -30,22 +30,22 @@ public:
 		rect_ = s->clip_rect;
 	}
 
-	sprite( const char *s, bool offset = true ) : offset_{ offset }
+	image( const char *s, bool offset = true ) : offset_{ offset }
 	{
-		SDL_Surface *sprite_ = IMG_Load( s );
-		if (!sprite_)
+		SDL_Surface *image_ = IMG_Load( s );
+		if (!image_)
 		{
-			std::cerr << "Cannot load sprite [" << s << "]\n";
-			throw "Cannot load sprite";
+			std::cerr << "Cannot load image [" << s << "]\n";
+			throw "Cannot load image";
 		}
-		assert( sprite_ );
-		texture_ = SDL_CreateTextureFromSurface( gRenderer, sprite_ );
+		assert( image_ );
+		texture_ = SDL_CreateTextureFromSurface( gRenderer, image_ );
 		assert( texture_ );
-		rect_ = sprite_->clip_rect;
-		SDL_FreeSurface( sprite_ );
+		rect_ = image_->clip_rect;
+		SDL_FreeSurface( image_ );
 	}
 
-	~sprite()
+	~image()
 	{
 		SDL_DestroyTexture( texture_ );
 	}
@@ -64,8 +64,8 @@ public:
 			dst_rect.y = (int)p.y;
 		}
 		int result = SDL_RenderCopyEx( gRenderer, texture_, &rect_, &dst_rect, rotate*90, nullptr, SDL_FLIP_NONE );
-		// int result  = SDL_BlitScaled( sprite_, &rect_, gScreen, &dst_rect );
-		// int result  = SDL_BlitSurface( sprite_, &rect_, gScreen, &dst_rect );
+		// int result  = SDL_BlitScaled( image_, &rect_, gScreen, &dst_rect );
+		// int result  = SDL_BlitSurface( image_, &rect_, gScreen, &dst_rect );
 		if (result<0)
 		{
 			std::cerr << "Error = " << result << "\n";
@@ -75,6 +75,7 @@ public:
 	
 	size_t height() const { return rect_.h; }
 	size_t width() const { return rect_.w; }
+	size size() const { return { (size_t)rect_.h, (size_t)rect_.w}; }
 };
 
 #endif

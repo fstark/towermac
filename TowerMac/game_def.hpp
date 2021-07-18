@@ -12,7 +12,7 @@
 /// A mob
 struct mob_def
 {
-	std::string sprite_name;
+	std::string image_name;
 	size_t hp;
 	float speed;
 	size_t damage;

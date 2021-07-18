@@ -2,12 +2,12 @@
 #define TOWER_INCLUDED__
 
 #include "simulation.hpp"
-#include "sprite.hpp"
+#include "image.hpp"
 #include "sound_manager.hpp"
 
 class tower : public simulated
 {
-	sprite sprite_{ "assets/towers/tower01.bmp" };
+	image image_{ "assets/towers/tower01.bmp" };
 	size_t charge_;        //  When 0, tower is charged
 
 	point location_;
@@ -32,7 +32,7 @@ public:
 
 	void render()
 	{
-		sprite_.render( location_ );
+		image_.render( location_ );
 	}
 
 	void step()

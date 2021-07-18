@@ -61,6 +61,18 @@ struct point
 	point operator+( const point &o ) const { return { x+o.x, y+o.y}; }
 };
 
+struct size
+{
+	size_t w;
+	size_t h;
+};
+
+struct rect
+{
+	point o;
+	size s;
+};
+
 struct vector2f
 {
 	double x;

@@ -105,8 +105,8 @@ class game_loop
 {
 	point target_{ 128, 128 };	///	Current mouse target
 
-	sprite map_background_{ "assets/general/map.bmp", false };
-	sprite map_background_gray_{ "assets/general/map-gray.bmp", false };
+	image map_background_{ "assets/general/map.bmp", false };
+	image map_background_gray_{ "assets/general/map-gray.bmp", false };
 	
 	enum eGameState
 	{
@@ -117,7 +117,7 @@ class game_loop
 		kGameExiting
 	};
 
-	sprite empty_towers_[4] = { "assets/towers/empty0.bmp", "assets/towers/empty1.bmp", "assets/towers/empty2.bmp", "assets/towers/empty3.bmp" };
+	image empty_towers_[4] = { "assets/towers/empty0.bmp", "assets/towers/empty1.bmp", "assets/towers/empty2.bmp", "assets/towers/empty3.bmp" };
 
 	eGameState state_ = kTowerPlacement;
 
@@ -233,7 +233,8 @@ class game_loop
 		map_background_gray_.render( point{ kMapX, kMapY } );
 //		font::normal->render_text( { 20, 20 } , "Hello, World" );
 //		font::normal->render_text( { 20, 20 } , "!\"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~" );
-		font::normal->render_text( { 1, 1 } , "   Hello, World: we can now write stuff on screen, including numb3r5!" );
+//		font::normal->render_text( { 1, 1 } , "   Hello, World: we can now write stuff on screen, including numb3r5!" );
+		font::bold->render_text( { 1, 1 } , "   And we even support BOLD!" );
 
 		if (state_==kTowerPlacement)
 		{

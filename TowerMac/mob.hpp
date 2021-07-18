@@ -11,7 +11,7 @@ class mob : public node<mob>, public simulated
 
 	float position_ = 0;
 
-	sprite sprite_;
+	image image_;
 	size_t hp_;
 	float speed_;
 	size_t damage_;
@@ -20,7 +20,7 @@ public:
 	mob( simulation &simulation, const path &path, const mob_def &mob_def ) :
 		simulated{simulation},
 		path_{ path },
-		sprite_{ mob_def.sprite_name.c_str() },
+		image_{ mob_def.image_name.c_str() },
 		hp_{ mob_def.hp },
 		speed_{ mob_def.speed },
 		damage_{ mob_def.damage }
@@ -29,7 +29,7 @@ public:
 
 	void render()
 	{
-		sprite_.render( path_.at( position_ ), path_.rotation_at( position_ ) );
+		image_.render( path_.at( position_ ), path_.rotation_at( position_ ) );
 	}
 
 	void step()

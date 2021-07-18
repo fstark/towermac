@@ -11,7 +11,7 @@
 #include <string>
 
 #include "core.hpp"
-#include "sprite.hpp"
+#include "image.hpp"
 
 #include <memory>
 
@@ -20,7 +20,7 @@ class font
 	std::string name_;
 	font( const std::string &filename );
 
-	std::shared_ptr<sprite> sprites_[256];
+	std::shared_ptr<image> images_[256];
 	
 public:
 	///	initialize the font subsystem
@@ -31,7 +31,8 @@ public:
 	static std::unique_ptr<font> bold;
 
 	///	Render text, starting at point p
-	void render_text( const point &p, const char *s );
+	void render_text( const point &p, const char *s ) const;
+	size_t measure_text( const char *s ) const;
 };
 
 #endif

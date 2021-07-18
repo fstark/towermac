@@ -2,12 +2,12 @@
 #define BASE_INCLUDED__
 
 #include "core.hpp"
-#include "sprite.hpp"
+#include "image.hpp"
 
 ///	The base we protect (the 68x)
 class base
 {
-	sprite sprite_{ "assets/general/base.bmp", false };
+	image image_{ "assets/general/base.bmp", false };
 
 	point location_;
 
@@ -18,7 +18,7 @@ public:
 
 	void render() const
 	{
-		sprite_.render( location_ );
+		image_.render( location_ );
 	}
 
 	bool damage( size_t damage )
