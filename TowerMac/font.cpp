@@ -47,8 +47,11 @@ static void set_pixel( SDL_Surface *s, size_t x, size_t y, uint32_t color )
 font::font( const std::string &filename )
 {
 	for (int i=0;i!=256;i++)
+	{
 		images_[i] = nullptr;
-	
+		inverted_[i] = nullptr;
+	}
+
 	SDL_Surface *s = IMG_Load( filename.c_str() );
 	if (!s)
 	{
@@ -84,6 +87,13 @@ font::font( const std::string &filename )
 				set_pixel( sub_surf, x0, y0, get_pixel( s, bx+x0, 1+y0 ) );
 
 		images_[c] = std::make_shared<image>( sub_surf, false );
+
+		for (int y0=0;y0!=sub_surf->h;y0++)
+			for (int x0=0;x0!=sub_surf->w;x0++)
+				set_pixel( sub_surf, x0, y0, get_pixel( sub_surf, x0, y0 )^0xffffff );
+		
+		inverted_[c] = std::make_shared<image>( sub_surf, false );
+
 		SDL_FreeSurface( sub_surf );
 		
 		p += x-bx;
@@ -93,23 +103,31 @@ font::font( const std::string &filename )
 
 		//	Uppercase letters
 	for (char c='a';c<='z';c++)
+	{
 		images_[c-'a'+'A'] = images_[c];
+		inverted_[c-'a'+'A'] = inverted_[c];
+	}
 
 	SDL_UnlockSurface( s );
 
 	SDL_FreeSurface( s );
 }
 
-void font::render_text( const point &origin, const char *string ) const
+void font::render_text( const point &origin, const char *string, bool inverted ) const
 {
 	point p{ origin };
 	int c;
+	auto img = images_;
+
+	if (inverted)
+		img = inverted_;
+
 	while((c=*string++))
 	{
-		if (images_[c])
+		if (img[c])
 		{
-			images_[c]->render( p );
-			p.x += images_[c]->width()+1;
+			img[c]->render( p );
+			p.x += img[c]->width()+1;
 		}
 	}
 }

@@ -22,6 +22,7 @@ SDL_Renderer *gRenderer = nullptr;
 #include "sound_manager.hpp"
 #include "game.hpp"
 #include "font.hpp"
+#include "ui.hpp"
 
 class mob_scheduler
 {
@@ -103,6 +104,8 @@ SDL_Window* window_ = NULL;
 
 class game_loop
 {
+	std::unique_ptr<window> screen_;
+	
 	point target_{ 128, 128 };	///	Current mouse target
 
 	image map_background_{ "assets/general/map.bmp", false };
@@ -226,45 +229,17 @@ class game_loop
 
 	void do_render()
 	{
-//        SDL_FillRect(gScreen, NULL, SDL_MapRGB(gScreen->format, 0xFF, 0xFF, 0xFF));
-		SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
-		SDL_RenderClear( gRenderer );
+		screen_->draw();
 
-		map_background_gray_.render( point{ kMapX, kMapY } );
 //		font::normal->render_text( { 20, 20 } , "Hello, World" );
 //		font::normal->render_text( { 20, 20 } , "!\"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz{|}~" );
 //		font::normal->render_text( { 1, 1 } , "   Hello, World: we can now write stuff on screen, including numb3r5!" );
-		font::bold->render_text( { 1, 1 } , "   And we even support BOLD!" );
+//		font::bold->render_text( { 1, 1 } , "   And we even support BOLD!" );
 
-		if (state_==kTowerPlacement)
-		{
-			for (auto s:game_->open_spots())
-				draw_spot( *s );
-		
-			for (auto p:game_def::spec.get_lanes(0))
-				draw_path( *p );
-		}
-
-		if (simulation_)
-		{
-			simulation_->get_base().render();
-
-			for (auto t:simulation_->get_towers())       //  #### not simulation, game
-				t->render();
-
-			if (state_==kGameRunning || state_==kGamePaused || state_==kGameStep)
-			{
-				for (auto m=simulation_->get_mobs()->begin();m!=simulation_->get_mobs()->end();m=m->next_)
-					m->render();
-
-				for (auto b=simulation_->get_bullets()->begin();b!=simulation_->get_bullets()->end();b=b->next_)
-					b->render();
-			}
-		}
 
 //        SDL_UpdateWindowSurface(window);
 
-		SDL_RenderPresent( gRenderer );
+//		SDL_RenderPresent( gRenderer );
 
 		ticks_++;
 	}
@@ -272,6 +247,47 @@ class game_loop
 public:
 	game_loop()
 	{
+		screen_ = window::make_window();
+
+		auto cv = new custom_view( {MAP_SIZE, MAP_SIZE}, [&](custom_view &,graphics&){
+			map_background_gray_.render( point{ kMapX, kMapY } );
+
+			if (state_==kTowerPlacement)
+			{
+				for (auto s:game_->open_spots())
+					draw_spot( *s );
+			
+				for (auto p:game_def::spec.get_lanes(0))
+					draw_path( *p );
+			}
+
+			if (simulation_)
+			{
+				simulation_->get_base().render();
+
+				for (auto t:simulation_->get_towers())       //  #### not simulation, game
+					t->render();
+
+				if (state_==kGameRunning || state_==kGamePaused || state_==kGameStep)
+				{
+					for (auto m=simulation_->get_mobs()->begin();m!=simulation_->get_mobs()->end();m=m->next_)
+						m->render();
+
+					for (auto b=simulation_->get_bullets()->begin();b!=simulation_->get_bullets()->end();b=b->next_)
+						b->render();
+				}
+			}
+		} );
+		screen_->root().add( cv, {kMapX,kMapY} );
+
+		auto v0 = new button( "Cancel" );
+		screen_->root().add( v0, {400,100} );
+//		v0->set_font( font::bold.get(), button::kStateSelected );
+//		v0->size_to_fit();
+		auto v1 = new button( "Ok", font::bold.get() );
+		screen_->root().add( v1, {v0->frame().right()+4,100} );
+		v1->set_selected( true );
+		
 		game_ = std::make_unique<game>();
 		for (auto &s:game_def::spec.spot_defs())
 			game_->add_spot( s );

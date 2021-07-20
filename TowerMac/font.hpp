@@ -21,7 +21,8 @@ class font
 	font( const std::string &filename );
 
 	std::shared_ptr<image> images_[256];
-	
+	std::shared_ptr<image> inverted_[256];
+
 public:
 	///	initialize the font subsystem
 	static void init();
@@ -31,7 +32,7 @@ public:
 	static std::unique_ptr<font> bold;
 
 	///	Render text, starting at point p
-	void render_text( const point &p, const char *s ) const;
+	void render_text( const point &p, const char *s, bool inverted=false ) const;
 	size_t measure_text( const char *s ) const;
 };
 

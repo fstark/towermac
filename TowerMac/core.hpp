@@ -59,6 +59,7 @@ struct point
 	bool operator!=( const point &o ) const { return x!=o.x || y!=o.y; }
 
 	point operator+( const point &o ) const { return { x+o.x, y+o.y}; }
+	point &operator+=( const point &o ) { x+=o.x; y+=o.y; return *this; }
 };
 
 struct size
@@ -71,6 +72,13 @@ struct rect
 {
 	point o;
 	size s;
+
+	rect inset( int w, int h ) { return { {o.x+w,o.y+h},{s.w-2*w,s.h-2*h} }; }
+	
+	size_t left() const { return o.x; }
+	size_t top() const { return o.y; }
+	size_t right() const { return o.x+s.w; }
+	size_t bottom() const { return o.y+s.h; }
 };
 
 struct vector2f
