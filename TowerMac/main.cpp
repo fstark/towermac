@@ -282,11 +282,23 @@ public:
 
 		auto v0 = new button( "Cancel" );
 		screen_->root().add( v0, {400,100} );
+//		v0->set_background_color( graphics::kBlack );
 //		v0->set_font( font::bold.get(), button::kStateSelected );
 //		v0->size_to_fit();
+
 		auto v1 = new button( "Ok", font::bold.get() );
 		screen_->root().add( v1, {v0->frame().right()+4,100} );
 		v1->set_selected( true );
+		auto v2 = new static_text( styled_string{ "This is a very long string that is over several lines, and is fully justified!\nIt evens contains two separate paragraphs, which is unheard of...", font::normal.get() }, /* 132 */ 160 );
+		screen_->root().add( v2, { 345,80 } );
+
+		auto v3 = new static_text( styled_string{ "This is a very long string that is over several lines, and is fully justified!\nIt evens contains two separate paragraphs, which is unheard of...", font::normal.get() }, 132 );
+		screen_->root().add( v3, { 145,80 } );
+
+		auto v4 = new static_text( styled_string{ "This is a very long string that is over several lines, and is fully justified!\nIt evens contains two separate paragraphs, which is unheard of...", font::normal.get() }, 62 );
+		screen_->root().add( v4, { 245,120 } );
+
+		
 		
 		game_ = std::make_unique<game>();
 		for (auto &s:game_def::spec.spot_defs())

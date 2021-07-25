@@ -44,6 +44,7 @@ static void set_pixel( SDL_Surface *s, size_t x, size_t y, uint32_t color )
 	uint32_t *p = (uint32_t *)((char *)s->pixels + y * s->pitch);
 	p[x] = color | s->format->Amask;
 }
+
 font::font( const std::string &filename )
 {
 	for (int i=0;i!=256;i++)
@@ -113,24 +114,68 @@ font::font( const std::string &filename )
 	SDL_FreeSurface( s );
 }
 
-void font::render_text( const point &origin, const char *string, bool inverted ) const
+void font::render_text(
+				 const point &origin,	//	Point to render the text
+				 const char *text,		//	Text to render
+				 size_t length,			//	Length of text to render
+				 bool inverted,			//	Invert text?
+				 fract space,			//	Width of each space (4 is good)
+				 fract separator		//	Width of each character separation (1 is good)
+				) const
 {
 	point p{ origin };
 	int c;
 	auto img = images_;
-
+	fract x{ (int)p.x };
+	
 	if (inverted)
 		img = inverted_;
 
-	while((c=*string++))
+	while (length--)
 	{
-		if (img[c])
+		c = *text++;
+		if (c==' ')
+		{
+			x = x+space+separator;
+			p.x = x.size_t_value();
+		}
+		else if (img[c])
 		{
 			img[c]->render( p );
-			p.x += img[c]->width()+1;
+			x = x+(int)img[c]->width();
+			x = x+separator;
+			p.x = x.size_t_value();
 		}
 	}
 }
+
+//void font::render_text( const point &origin, const char *string, size_t intra_spacing, bool inverted ) const
+//{
+//	point p{ origin };
+//	int c;
+//	auto img = images_;
+//
+//	size_t letter_count = strlen(string);
+//
+//	double letter_skip = 0;
+//	double dpos = p.x;
+//
+//	if (letter_count>1)
+//		letter_skip = intra_spacing/(double)(letter_count-1);	// #### Incorrect for SE/30
+//
+//	if (inverted)
+//		img = inverted_;
+//
+//	while((c=*string++))
+//	{
+//		if (img[c])
+//		{
+//			img[c]->render( p );
+//			dpos += img[c]->width()+1+letter_skip;
+//			p.x = (dpos+.5);
+//		}
+//	}
+//}
 
 size_t font::measure_text( const char *s ) const
 {

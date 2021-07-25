@@ -44,9 +44,16 @@ void graphics::move_to( point p )
 	state_.location = state_.origin+p;
 }
 
-void graphics::draw_text( const std::string &s, bool inverted )
+void graphics::draw_text( const char *p, size_t length, bool inverted )
 {
-	state_.font->render_text( state_.location, s.c_str(), inverted );
+	state_.font->render_text(
+							 state_.location,
+							 p,
+							 length,
+							 inverted,
+							 state_.space_width,
+							 state_.char_interval
+							 );
 }
 
 void window::draw()
