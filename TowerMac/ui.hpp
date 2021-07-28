@@ -16,6 +16,129 @@
 #include "font.hpp"
 #include "core.hpp"
 
+typedef enum
+{
+    kNone,
+    kWord,
+    kLinebreak
+} eTokenType;
+
+struct letter
+{
+    char c;
+    uint8_t spacing = 0;
+};
+    
+struct token
+{
+    eTokenType tokenType = kNone;
+    size_t width = 0;
+    std::vector<letter> letters;
+};
+
+struct styled_string
+{
+    const std::string text;
+    const font *font;
+    const bool inverted;
+};
+
+
+//  "I am a regular string with a bolded word."
+//  "I am a regular string with a **bolded** word."
+
+// WyK : templatize vector into iterator
+static void tokenize(std::vector<token> &tokens, const styled_string &string)
+{
+    token token;
+    for(auto c : string.text)
+    {
+        switch(c)
+        {
+            case '\n':
+                if(token.tokenType!=kNone)
+                    tokens.push_back(std::move(token));
+                tokens.push_back({kLinebreak});
+                token = {};
+                break;
+            case ' ':
+                if(token.tokenType!=kNone)
+                    tokens.push_back(std::move(token));
+                token = {};
+                break;
+            default:
+                token.tokenType = kWord;
+                token.letters.push_back({c});
+                token.width+= string.font->widthof(c);
+        }
+    }
+    if(token.tokenType==kWord)
+    {
+        tokens.push_back(std::move(token));
+    }
+}
+
+typedef std::vector<token> line;
+
+static std::vector<line> arrange( const std::vector<token> &tokens, size_t max_line_width, size_t min_space_length, size_t min_separator_length, size_t &actual_max_width )
+{
+    // WyK : TOKEN IS COPIED. CHANGE THAT.
+    std::vector<line> res;
+    line line;
+    size_t width = 0;
+    bool first_word_of_line = true;
+    
+    for(token t : tokens)
+    {
+        retry:
+        size_t min_word_width =  t.tokenType == kWord ? (first_word_of_line ? 0 : min_space_length) + t.width+ (t.letters.size()+(first_word_of_line ? 0 : 2)-1)*min_separator_length : 0;
+        if(t.tokenType == kLinebreak)
+        {
+            actual_max_width = std::max(actual_max_width, width);
+            width = 0;
+            line.push_back(t);
+            res.push_back(std::move(line));
+            line.clear();
+            continue;
+        }
+        if(t.tokenType == kWord && width + min_word_width > max_line_width)
+        {
+            if( first_word_of_line )
+            {
+                actual_max_width = max_line_width;
+                line.push_back(t);
+                first_word_of_line = true;
+                width = 0;
+                res.push_back(std::move(line));
+                line.clear();
+                continue;
+            }
+            first_word_of_line = true;
+            actual_max_width = std::max(actual_max_width, width);
+            width = 0;
+            res.push_back(std::move(line));
+            line.clear();
+            goto retry;
+        }
+        width += min_word_width;
+        line.push_back(t);
+        first_word_of_line = false;
+    }
+    actual_max_width = std::max(actual_max_width, width);
+    res.push_back(std::move(line));
+    return res;
+}
+
+static size_t widthof(const line line)
+{
+    size_t res = 0;
+    for(auto token : line)
+    {
+        res+=token.width;
+    }
+    return res;
+}
+
 ///	Something that can draw stuff an expose primitives (using SDL or others)
 class graphics
 {
@@ -60,7 +183,7 @@ public:
 	void fill_rect( const rect & r );
 	void set_origin( const point &p ) { state_.origin += p; }
 	void set_font( const font *font ) { state_.font = font; }
-	void draw_text( const std::string &s, bool inverted ) { draw_text( s.c_str(), s.size(), inverted ); }
+    void draw_text( const line &line);
 	void move_to( point p );
 
 	void push() { states_.push_back( state_ ); }
@@ -254,26 +377,8 @@ public:
 
 		g.set_font( cells_[state_].font );
 		g.move_to( {2,1} );
-		g.draw_text( cells_[state_].text, cells_[state_].inverted );
+		//g.draw_text( cells_[state_].text, cells_[state_].inverted );
 	}
-};
-
-struct styled_string
-{
-	const std::string text;
-	const font *font;
-	const bool inverted;
-//	size_t width() const
-//	{
-//		return font_->measure_text( text_.c_str() );
-//	};
-//
-//	void draw( graphics &g, point p ) const
-//	{
-//		g.set_font( font_ );
-//		g.move_to( p );
-//		g.draw_text( text_, inverted_ );
-//	}
 };
 
 ///	This class specifies how a text is layed out on the screen
@@ -290,83 +395,120 @@ class layout
 	}	eAlignment;
 
 	eAlignment alignment_;
-	
-public:
-	struct line
-	{
-		size_t char_start;
-		size_t char_count;
-		size_t space_count;
-		size_t text_width;		///	Width in pixels of text only
-
-		size_t offset;			///	Offset of the line from the left side in pixels
-		fract space_width;		///	Size of spaces
-		fract char_interval;	///	Size of spaces
-		
-		size_t y;
-	};
-
+    
+    void allocate_remaining_width(size_t n_spaces, size_t n_separators, size_t remaining_width, size_t &remaining_width_for_spaces, size_t &remaining_width_for_separators, size_t &space_width, size_t &separator_width)
+    {
+        if(n_spaces == 0)
+        {
+            remaining_width_for_spaces = 0;
+            space_width = 0;
+            remaining_width_for_separators = remaining_width;
+            separator_width = remaining_width_for_separators / n_separators;
+            return;
+        }
+        remaining_width_for_separators = n_separators;
+        remaining_width_for_spaces = remaining_width - remaining_width_for_separators;
+        if(remaining_width_for_spaces <= 4*n_spaces)
+        {
+            space_width = remaining_width_for_spaces / n_spaces;
+            separator_width = 1;
+            return;
+        }
+        space_width = 3;
+        remaining_width_for_spaces = 3*n_spaces;
+        remaining_width_for_separators = remaining_width - remaining_width_for_spaces;
+        do
+        {
+            space_width++;
+            remaining_width_for_spaces += n_spaces;
+            remaining_width_for_separators -= n_spaces;
+            separator_width = n_separators ? remaining_width_for_separators / n_separators : 0;
+        }
+        while(space_width <= separator_width);
+    }
+    void bresenham(letter &letter, int &counter, size_t width, int items, size_t total_width)
+    {
+        letter.spacing += width;
+        counter += total_width;
+        if(counter*2 >= items)
+        {
+            letter.spacing++;
+            counter -= items;
+        }
+    }
+    
+    void justify(line &line, size_t remaining_width)
+    {
+        int n_spaces = line.size()-1;
+        int n_separators = 0;
+        for(auto &word : line)
+        {
+            n_separators += word.letters.size()+1;
+        }
+        n_separators-=2;
+        size_t remaining_width_for_separators;
+        size_t remaining_width_for_spaces;
+        size_t space_width;
+        size_t separator_width;
+        allocate_remaining_width(n_spaces, n_separators, remaining_width, remaining_width_for_spaces, remaining_width_for_separators, space_width, separator_width);
+        int sp_c = 0;
+        int se_c = 0;
+        for(auto &word : line)
+        {
+            for (auto letter = word.letters.begin(); letter != std::prev(word.letters.end()); ++letter)
+                bresenham(*letter, se_c, separator_width, n_separators, remaining_width_for_separators - n_separators * separator_width);
+            bresenham(word.letters.back(), se_c, separator_width, n_separators, remaining_width_for_separators - n_separators * separator_width);
+            bresenham(word.letters.back(), sp_c, space_width, n_spaces, remaining_width_for_spaces - n_spaces * space_width);
+            bresenham(word.letters.back(), se_c, separator_width, n_separators, remaining_width_for_separators - n_separators * separator_width);
+        }
+    }
+    
+    void default_spacing(line &line)
+    {
+        for(auto &word : line)
+        {
+            if(word.tokenType == kLinebreak)
+                continue;
+            for (auto letter = word.letters.begin(); letter != std::prev(word.letters.end()); ++letter)
+                letter->spacing = 1;
+            word.letters.back().spacing = 4;
+        }
+    }
+    
 protected:
 	std::vector<line> lines_;
 
 public:
-	layout( const styled_string &text, size_t width ) : text_(text), width_{width}
+	layout( const styled_string &text, size_t width ) : text_(text)
 	{
-		const char *current_char = text_.text.c_str();
-		size_t remaining_chars = text_.text.size();
-		size_t y = 0;
-		size_t offset = 0;
-		while (remaining_chars>0)
-		{
-			auto m = text_.font->measure_text_words( current_char+offset, remaining_chars, width_, 2, 1 );
-		
-			fract space;
-			fract sep{1};
-			if (m.space_count)
-				space = ( fract{width} - m.width ) / m.space_count + 2;
-			else
-				space = 5;	//	hack to go into next test
-			
-			if (space>4)
-			{
-				space = 4;
-				sep = ( fract{width} - m.width + 2 * m.space_count + 1 * (m.length-1) - space * m.space_count ) / (m.length-1);
-			}
-				
-			lines_.push_back( { offset+m.skip, m.length, m.space_count, width, 3, space, sep, y } );
-
-			std::clog << "LINE WIDTH=" << m.width.int_value() << "/" << width << " CHARS= " << m.length << " SPACE=" << space.int_value() << " " << " SEP=" << sep.int_value() << "\n";
-
-			offset += m.skip +  m.length;
-			remaining_chars -= m.skip + m.length;
-			y += 9;
-
-			if (m.eol)
-			{
-				lines_.back().space_width = 2;
-				lines_.back().char_interval = 1;
-			}
-		}
-
-			//		lines_.push_back( { 0, 31, 6, width, 3, fract{240}/100, 1, 0 } );
-//		lines_.push_back( { 32, 29, 5, width, 3, fract{300}/100, fract{125}/100, 9 } );
-//		lines_.push_back( { 62, 16, 2, width, 3, 2, 1, 18 } );
-	}
+        std::vector<token> tokens;
+        tokenize(tokens, text);
+        size_t max_width = 0;
+        lines_ = arrange(tokens, width, 2, 1, max_width); // magical values are magical
+        width_ = max_width;
+        for(auto line = lines_.begin(); line != std::prev(lines_.end()); ++line) // every line but the last
+        {
+            if(line->back().tokenType == kLinebreak) // lines ending with linebreaks aren't justified.
+                default_spacing(*line);
+            else
+                justify(*line, max_width - widthof(*line));
+        }
+        default_spacing(lines_.back()); // last line isn't justified.
+    }
 
 	size_t line_count() const { return lines_.size(); }
+    size_t line_width() const { return width_; }
 
 	void render( graphics g )
 	{
 		g.set_font( text_.font );
-
-		auto p = text_.text.c_str();
 		
-		for (auto &l:lines_)
+        size_t h = 1;
+		for (auto &line : lines_)
 		{
-			g.move_to( { l.offset, l.y+1 } );
-			g.set_space_width( l.space_width );
-			g.set_char_interval( l.char_interval );
-			g.draw_text( p+l.char_start, l.char_count, text_.inverted );
+			g.move_to( { 3, h } );
+			g.draw_text( line );
+            h+=9;
 		}
 	}
 };
@@ -386,6 +528,7 @@ public:
 	void size_to_fit()
 	{
 		bounds_.s.h = layout_.line_count()*9;
+        bounds_.s.w = layout_.line_width()+6;
 	}
 
 	virtual void draw_self( graphics &g )

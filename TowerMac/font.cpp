@@ -114,79 +114,22 @@ font::font( const std::string &filename )
 	SDL_FreeSurface( s );
 }
 
-void font::render_text(
-				 const point &origin,	//	Point to render the text
-				 const char *text,		//	Text to render
-				 size_t length,			//	Length of text to render
-				 bool inverted,			//	Invert text?
-				 fract space,			//	Width of each space (4 is good)
-				 fract separator		//	Width of each character separation (1 is good)
-				) const
+void font::draw_letter(point &screen_pointer, char c) const
 {
-	point p{ origin };
-	int c;
-	auto img = images_;
-	fract x{ (int)p.x };
-	
-	if (inverted)
-		img = inverted_;
-
-	while (length--)
-	{
-		c = *text++;
-		if (c==' ')
-		{
-			x = x+space+separator;
-			p.x = x.size_t_value();
-		}
-		else if (img[c])
-		{
-			img[c]->render( p );
-			x = x+(int)img[c]->width();
-			x = x+separator;
-			p.x = x.size_t_value();
-		}
-	}
+    images_[c]->render( screen_pointer );
+    screen_pointer.x+=((int)images_[c]->width());
 }
-
-//void font::render_text( const point &origin, const char *string, size_t intra_spacing, bool inverted ) const
-//{
-//	point p{ origin };
-//	int c;
-//	auto img = images_;
-//
-//	size_t letter_count = strlen(string);
-//
-//	double letter_skip = 0;
-//	double dpos = p.x;
-//
-//	if (letter_count>1)
-//		letter_skip = intra_spacing/(double)(letter_count-1);	// #### Incorrect for SE/30
-//
-//	if (inverted)
-//		img = inverted_;
-//
-//	while((c=*string++))
-//	{
-//		if (img[c])
-//		{
-//			img[c]->render( p );
-//			dpos += img[c]->width()+1+letter_skip;
-//			p.x = (dpos+.5);
-//		}
-//	}
-//}
 
 size_t font::measure_text( const char *s ) const
 {
 	size_t w = 0;
 	int c;
 	while((c=*s++))
-	{
-		if (images_[c])
-		{
-			w += images_[c]->width()+1;
-		}
-	}
-	return w-1;
+        w+=widthof(c);
+	return w;
+}
+
+size_t font::widthof(char c) const
+{
+    return at(c)->width();
 }

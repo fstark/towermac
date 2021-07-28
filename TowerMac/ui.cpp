@@ -44,16 +44,15 @@ void graphics::move_to( point p )
 	state_.location = state_.origin+p;
 }
 
-void graphics::draw_text( const char *p, size_t length, bool inverted )
+void graphics::draw_text( const line &line )
 {
-	state_.font->render_text(
-							 state_.location,
-							 p,
-							 length,
-							 inverted,
-							 state_.space_width,
-							 state_.char_interval
-							 );
+    for(auto &word : line)
+        for(auto &letter : word.letters)
+        {
+            state_.font->draw_letter(state_.location, letter.c);
+            state_.location.x+=letter.spacing;
+        }
+        
 }
 
 void window::draw()
